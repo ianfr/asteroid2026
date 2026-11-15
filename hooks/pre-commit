@@ -1,0 +1,16 @@
+#!/bin/sh
+# Format Swift and Python sources with the standard formatters before commit.
+set -eu
+if command -v swift-format >/dev/null 2>&1; then
+    swift-format -i -r Sources Tests
+else
+    echo "pre-commit: swift-format not found on PATH, skipping Swift format." >&2
+fi
+if command -v black >/dev/null 2>&1; then
+    black -q scripts
+elif conda env list 2>/dev/null | grep -q env_asteroid2026; then
+    conda run -n env_asteroid2026 black -q scripts
+else
+    echo "pre-commit: black not found, skipping Python format." >&2
+fi
+git diff --name-only -- Sources Tests scripts | xargs -r git add --

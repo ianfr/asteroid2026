@@ -1,0 +1,17 @@
+name: env_asteroid2026
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - numpy
+  - pandas
+  - matplotlib
+  - pillow
+  - pyvista
+  - imageio
+  - xvfbwrapper
+  - black
+  # Xvfb server binary for headless pyvista rendering. This build string is
+  # for linux-aarch64; on linux-64 use xorg-x11-server-xvfb-cos6-x86_64.
+  - xorg-x11-server-xvfb-cos7-aarch64
+  - pytest
