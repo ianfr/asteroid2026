@@ -21,5 +21,14 @@ let package = Package(
                 .enableUpcomingFeature("ApproachableConcurrency"),
             ],
         ),
+        .testTarget(
+            name: "MicroBenchmarks",
+            dependencies: ["asteroid2026"],
+            path: "MicroBenchmarks",
+            exclude: ["README.md"],
+            swiftSettings: [
+                .enableUpcomingFeature("ApproachableConcurrency"),
+            ],
+        ),
     ]
 )
