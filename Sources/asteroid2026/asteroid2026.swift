@@ -1,28 +1,7 @@
 import Foundation
 
-@main
-struct asteroid2026 {
-    static func main() {
-        var system_rng = SystemRandomNumberGenerator()
-        let first_seed = UInt64.random(in: UInt64.min...UInt64.max, using: &system_rng)
-        let second_seed = UInt64.random(in: UInt64.min...UInt64.max, using: &system_rng)
-        let third_seed = UInt64.random(in: UInt64.min...UInt64.max, using: &system_rng)
-        print("asteroid seeds: \(first_seed), \(second_seed), \(third_seed)")
-        let simulation = make_collision(
-            first_seed: first_seed, second_seed: second_seed, third_seed: third_seed)
-        print("particles: \(simulation.particles.count)")
-        let output_directory = "OUT/desktop"
-        do {
-            try clear_output_directory(output_directory)
-            try simulation.run(steps: 2000, output_directory: output_directory, write_every: 10)
-            print("done, elapsed: \(simulation.elapsed_time)")
-        }
-        catch {
-            print("run failed: \(error)")
-        }
-    }
-
-    static func clear_output_directory(_ path: String) throws {
+public struct asteroid2026 {
+    public static func clear_output_directory(_ path: String) throws {
         let file_manager = FileManager.default
         try file_manager.createDirectory(atPath: path, withIntermediateDirectories: true)
         // A shorter run must not leave frames from a previous, longer run behind.
@@ -34,7 +13,7 @@ struct asteroid2026 {
         }
     }
 
-    static func make_collision(
+    public static func make_collision(
         first_seed: UInt64, second_seed: UInt64, third_seed: UInt64
     ) -> simulation_t {
         var config = simulation_config_t()

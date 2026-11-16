@@ -439,6 +439,47 @@ import Testing
     }
 }
 
+@Test func calibrated_cohesion_config_matches_formulas() {
+    let tuned = calibrated_cohesion_config(
+        particle_mass: 5e6, particle_radius: 10.0, surface_gravity: 8e-5,
+        hold_speed: 0.2, break_speed: 1.0, overlap_fraction: 0.01)
+    #expect(tuned.model == .spring)
+    #expect(tuned.connect_momentum == 2.5e6 * 0.2)
+    #expect(tuned.break_momentum == 2.5e6 * 1.0)
+    #expect(tuned.spring_stiffness == 5e6 * 8e-5 / 0.1)
+    #expect(tuned.spring_damping == 2.0 * (tuned.spring_stiffness * 2.5e6).squareRoot())
+}
+
+@Test func calibrated_cohesion_config_bonds_slow_pair_only() {
+    let tuned = calibrated_cohesion_config(
+        particle_mass: 5e6, particle_radius: 10.0, surface_gravity: 8e-5,
+        hold_speed: 0.2, break_speed: 1.0, overlap_fraction: 0.01)
+    for speed in [0.0, 0.1] {
+        let pair = [
+            particle_t(
+                id: 0, mass: 5e6, radius: 10, position: vector3_t(0, 0, 0),
+                velocity: vector3_t(-speed / 2.0, 0, 0)),
+            particle_t(
+                id: 1, mass: 5e6, radius: 10, position: vector3_t(20, 0, 0),
+                velocity: vector3_t(speed / 2.0, 0, 0)),
+        ]
+        var state = cohesion_state_t()
+        update_cohesion_bonds(particles: pair, state: &state, config: tuned)
+        #expect(state.bonds.count == 1)
+    }
+    let fast = [
+        particle_t(
+            id: 0, mass: 5e6, radius: 10, position: vector3_t(0, 0, 0),
+            velocity: vector3_t(-2.5, 0, 0)),
+        particle_t(
+            id: 1, mass: 5e6, radius: 10, position: vector3_t(20, 0, 0),
+            velocity: vector3_t(2.5, 0, 0)),
+    ]
+    var fast_state = cohesion_state_t()
+    update_cohesion_bonds(particles: fast, state: &fast_state, config: tuned)
+    #expect(fast_state.bonds.isEmpty)
+}
+
 @Test func cohesion_none_forms_no_bonds() async throws {
     var config = cohesion_config_t()
     config.model = .none

@@ -34,11 +34,14 @@ private func make_collision_benchmark_particles(count: Int) -> [particle_t] {
     let spacing = 2.5
     let side = Int(ceil(pow(Double(count), 1.0 / 3.0)))
     for i in 0..<count {
-        let jx = (lattice_unit(index: i, multiplier: 0.6180339887498949) - 0.5)
+        let jx =
+            (lattice_unit(index: i, multiplier: 0.6180339887498949) - 0.5)
             * spacing * 0.4
-        let jy = (lattice_unit(index: i, multiplier: 0.4142135623730951) - 0.5)
+        let jy =
+            (lattice_unit(index: i, multiplier: 0.4142135623730951) - 0.5)
             * spacing * 0.4
-        let jz = (lattice_unit(index: i, multiplier: 0.7320508075688772) - 0.5)
+        let jz =
+            (lattice_unit(index: i, multiplier: 0.7320508075688772) - 0.5)
             * spacing * 0.4
         particles.append(
             particle_t(

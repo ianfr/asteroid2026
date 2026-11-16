@@ -17,6 +17,28 @@ public struct cohesion_config_t: Sendable {
     public init() {}
 }
 
+public func calibrated_cohesion_config(
+    particle_mass: Double,
+    particle_radius: Double,
+    surface_gravity: Double,
+    hold_speed: Double,
+    break_speed: Double,
+    overlap_fraction: Double
+) -> cohesion_config_t {
+    var config = cohesion_config_t()
+    config.model = .spring
+    let reduced = particle_mass / 2.0
+    // Bonds form below the hold speed and break above the break speed.
+    config.connect_momentum = reduced * hold_speed
+    config.break_momentum = reduced * break_speed
+    // Stiffness carries one particle weight at the allowed overlap.
+    config.spring_stiffness =
+        particle_mass * surface_gravity / (overlap_fraction * particle_radius)
+    // Near-critical damping of the reduced two-body oscillator.
+    config.spring_damping = 2.0 * (config.spring_stiffness * reduced).squareRoot()
+    return config
+}
+
 public struct bond_t: Hashable, Sendable {
     public var index_a: Int
     public var index_b: Int

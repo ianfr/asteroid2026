@@ -52,7 +52,8 @@ Knobs in [`simulation_config_t`](Sources/asteroid2026/simulation_config_t.swift)
 
 ```sh
 swift test
-swift run -c release  # OUT/desktop/ast.csv.*
+swift run -c release -- bennu  # OUT/desktop/ast.csv.*
+swift run Examples cohesion  # cohesion calibration at Bennu scales
 conda env create -f environment.yml
 conda activate env_asteroid2026
 python scripts/postprocess.py OUT/desktop --out plots --seconds-per-frame 1.5
